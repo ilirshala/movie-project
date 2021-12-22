@@ -1,10 +1,10 @@
 import React from "react";
-import Container from "../../components/Home/Container";
+import Container from "../../components/Home/Container.js";
 
-function HomeScreen() {
+function HomeScreen({ movies }) {
   return (
     <div>
-      <Container />
+      <Container movies={movies} />
     </div>
   );
 }
