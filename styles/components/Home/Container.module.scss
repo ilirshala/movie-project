@@ -9,10 +9,59 @@
     width: 80%;
     height: auto;
     margin: auto;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-wrap: wrap;
+
     gap: 35px;
+    ul {
+      width: 100%;
+      list-style: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 40px;
+      .movieCard {
+        width: 320px;
+        height: 190px;
+        border-radius: 30px;
+        background-color: #23243d;
+        padding: 0px;
+        color: white;
+        padding-top: 30px;
+        transition: 0.3s linear;
+        &:hover {
+          transform: translateY(-10px);
+          cursor: pointer;
+        }
+
+        &__header {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          flex-direction: column;
+          margin-bottom: 20px;
+          gap: 20px;
+          h3 {
+            color: #fd9519;
+            &:first-child {
+              font-size: 15px;
+            }
+          }
+          h2 {
+            font-size: 20px;
+          }
+        }
+        &__episodes {
+          margin-top: 20px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          flex-direction: column;
+          gap: 20px;
+          .MuiSvgIcon-root {
+            font-size: 40px !important;
+          }
+        }
+      }
+    }
   }
 }

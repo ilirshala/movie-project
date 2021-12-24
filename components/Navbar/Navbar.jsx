@@ -1,3 +1,4 @@
+import Link from "next/link";
 import React from "react";
 import styles from "../../styles/components/Navbar/Navbar.module.scss";
 
@@ -9,9 +10,9 @@ function Navbar() {
       </div>
       <div className={styles.navbar__right}>
         <ul>
-          <li>Home</li>
-          <li>Favourites</li>
-          <li>About</li>
+          <Link href="/">
+            <li>Home</li>
+          </Link>
         </ul>
         <input type="text" placeholder="Search..." />
       </div>
