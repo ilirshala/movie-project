@@ -1,6 +1,7 @@
 import styles from "../styles/components/MovieDetails/MovieDetail.module.scss";
 import { FaRegHeart, FaHeart } from "react-icons/fa";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import Loading from "../components/Loading/Loading";
 
 export const getStaticPaths = async () => {
   const response = await fetch("https://www.swapi.tech/api/films");
@@ -32,7 +33,31 @@ export const getStaticProps = async (context) => {
 
 const Details = ({ movie }) => {
   const [favourite, setFavourite] = useState(false);
-  console.log(movie.result.properties.characters[1]);
+  const [actorArray, setActorArray] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [detailsList, setDetailsList] = useState(false);
+  const [actorId, setActorId] = useState("");
+
+  const requestCharacter = async (link) => {
+    const response = await fetch(link);
+    const data = await response.json();
+
+    return data;
+  };
+
+  useEffect(async () => {
+    setLoading(true);
+
+    for (let actor of movie.result.properties.characters) {
+      const actorData = await requestCharacter(actor);
+      if (actorData.message === "ok") {
+        const { result } = actorData;
+        actorArray.push(result);
+      }
+    }
+    setLoading(false);
+    console.log(actorArray);
+  }, []);
   return (
     <div className={styles.movieDetails}>
       <div className={styles.movieDetails__container}>
@@ -59,11 +84,33 @@ const Details = ({ movie }) => {
           </h4>
         </div>
         <h2>List of Characters</h2>
-        <ul>
-          {/* {movie.result.properties.characters.map((actor) => (
-            <li>{actor}</li>
-          ))} */}
-        </ul>
+        {loading ? (
+          <Loading />
+        ) : (
+          <ul>
+            {actorArray.map((actor) => (
+              <>
+                <li onClick={() => setActorId(actor._id)}>
+                  {actor.properties.name}
+                  <ul
+                    style={{
+                      display: actorId === actor._id ? "block" : "none",
+                    }}
+                  >
+                    <li>{actor.properties.height}</li>
+                    <li>hello</li>
+                    <li>hello</li>
+                    <li>hello</li>
+                    <li>hello</li>
+                    <li>hello</li>
+                    <li>hello</li>
+                    <li>hello</li>
+                  </ul>
+                </li>
+              </>
+            ))}
+          </ul>
+        )}
       </div>
     </div>
   );

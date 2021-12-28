@@ -4,8 +4,13 @@ import Navbar from "../components/Navbar/Navbar";
 import styles from "../styles/components/Home/Container.module.scss";
 
 export const getStaticProps = async () => {
-  const res = await fetch("https://www.swapi.tech/api/films");
-  const data = await res.json();
+  let data = [];
+  try {
+    const res = await fetch("https://www.swapi.tech/api/films");
+    data = await res.json();
+  } catch (err) {
+    console.log(err);
+  }
 
   return {
     props: { movies: data },
@@ -18,7 +23,7 @@ export default function Home({ movies }) {
       <Navbar />
       <div className={styles.container__movies}>
         <ul>
-          {movies?.result.map((movie) => (
+          {movies?.result?.map((movie) => (
             <Link href={"/" + movie.uid}>
               <li className={styles.movieCard}>
                 <div className={styles.movieCard__header}>
