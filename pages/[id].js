@@ -47,8 +47,8 @@ const Details = ({ movie }) => {
 
   useEffect(async () => {
     setLoading(true);
-
-    for (let actor of movie.result.properties.characters) {
+    const [firstelememt] = movie.result.properties.characters;
+    for (let actor of [firstelememt]) {
       const actorData = await requestCharacter(actor);
       if (actorData.message === "ok") {
         const { result } = actorData;
@@ -71,51 +71,57 @@ const Details = ({ movie }) => {
             )}
           </p>
         </h4>
-        <h1>{movie.result.properties.title}</h1>
-        <p>{movie.result.properties.opening_crawl}</p>
-        <div className={styles.movieDetails__container_directors}>
-          <h4>
-            Director: <span>{movie.result.properties.director}</span>
-          </h4>
+        <div className={styles.movieDetails__container_flexPart}>
+          <div className={styles.movieDetails__container_flexPart_left}>
+            <h1>{movie.result.properties.title}</h1>
+            <p>{movie.result.properties.opening_crawl}</p>
+            <div className={styles.movieDetails__container_directors}>
+              <h4>
+                Director: <span>{movie.result.properties.director}</span>
+              </h4>
+            </div>
+            <div className={styles.movieDetails__container_directors}>
+              <h4>
+                Producers: <span>{movie.result.properties.producer}</span>
+              </h4>
+            </div>
+          </div>
+          <div className={styles.movieDetails__container_flexPart_right}>
+            {" "}
+            <h2>List of Characters</h2>
+            {loading ? (
+              <Loading />
+            ) : (
+              <ul>
+                {actorArray.map((actor) => (
+                  <>
+                    <li
+                      onMouseOver={() => setActorId(actor._id)}
+                      onMouseLeave={() => setActorId(!actor._id)}
+                    >
+                      {actor.properties.name}
+                      <ul
+                        style={{
+                          display: actorId === actor._id ? "block" : "none",
+                        }}
+                      >
+                        <li>Height: {actor.properties.height}</li>
+                        <li>Mass: {actor.properties.mass}</li>
+                        <li>Hair Color: {actor.properties.hair_color}</li>
+                        <li>Skin Color: {actor.properties.skin_color}</li>
+                        <li>Birth Year: {actor.properties.eye_color}</li>
+                        <li>Gender: {actor.properties.gender}</li>
+                      </ul>
+                    </li>
+                  </>
+                ))}
+              </ul>
+            )}
+          </div>
         </div>
-        <div className={styles.movieDetails__container_directors}>
-          <h4>
-            Producers: <span>{movie.result.properties.producer}</span>
-          </h4>
-        </div>
-        <h2>List of Characters</h2>
-        {loading ? (
-          <Loading />
-        ) : (
-          <ul>
-            {actorArray.map((actor) => (
-              <>
-                <li onClick={() => setActorId(actor._id)}>
-                  {actor.properties.name}
-                  <ul
-                    style={{
-                      display: actorId === actor._id ? "block" : "none",
-                    }}
-                  >
-                    <li>{actor.properties.height}</li>
-                    <li>hello</li>
-                    <li>hello</li>
-                    <li>hello</li>
-                    <li>hello</li>
-                    <li>hello</li>
-                    <li>hello</li>
-                    <li>hello</li>
-                  </ul>
-                </li>
-              </>
-            ))}
-          </ul>
-        )}
       </div>
     </div>
   );
 };
 
 export default Details;
-//<h1>Hello World</h1>
-//<h1> {movie.result.properties.opening_crawl}</h1>

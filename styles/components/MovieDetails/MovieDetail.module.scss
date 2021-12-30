@@ -6,8 +6,8 @@
   justify-content: center;
 
   &__container {
-    width: 45%;
-    height: auto;
+    width: 65%;
+    height: 60%;
     background: rgba(36, 150, 255, 0.15);
     border-radius: 16px;
     box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
@@ -15,6 +15,18 @@
     -webkit-backdrop-filter: blur(9.8px);
     border: 1px solid rgba(36, 150, 255, 0.25);
     padding: 30px 50px;
+    &_flexPart {
+      display: flex;
+      justify-content: space-around;
+      gap: 70px;
+      &_left {
+        width: 75%;
+      }
+      &_right {
+        width: 45%;
+        height: max-content;
+      }
+    }
     &_episodes {
       display: flex;
       align-items: center;
@@ -53,14 +65,40 @@
       align-items: center;
       justify-content: center;
       flex-wrap: wrap;
-      gap: 20px;
+      gap: 15px;
       li {
+        text-align: center;
         background: lightblue;
         padding: 5px 10px;
         font-size: 15px;
         border-radius: 10px;
         cursor: pointer;
         color: blue;
+        position: relative;
+        ul {
+          position: absolute;
+          z-index: 10000;
+          left: 0;
+          box-shadow: 0.5px 1px 2.2px rgba(0, 0, 0, 0.025),
+            1.1px 2.3px 5.3px rgba(0, 0, 0, 0.03),
+            2.1px 4.4px 10px rgba(0, 0, 0, 0.03),
+            3.8px 7.8px 17.9px rgba(0, 0, 0, 0.031),
+            7.1px 14.6px 33.4px rgba(0, 0, 0, 0.039),
+            17px 35px 80px rgba(0, 0, 0, 0.1);
+          li {
+            font-weight: bold;
+            border-radius: 0;
+            border-bottom: 1px solid lightskyblue;
+            font-size: 13px;
+            px &:first-child {
+              border-radius: 3px 3px 0 0;
+            }
+            &:last-child {
+              border-radius: 0 0 5px 5px;
+              border-bottom: 1px solid transparent;
+            }
+          }
+        }
       }
     }
   }
