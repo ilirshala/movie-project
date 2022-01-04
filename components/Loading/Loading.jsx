@@ -5,7 +5,7 @@ function Loading() {
   return (
     <div className={styles.loading}>
       <p>Loading...</p>
-      <div class={styles.lds_roller}>
+      <div className={styles.lds_roller}>
         <div></div>
         <div></div>
         <div></div>

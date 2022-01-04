@@ -2,6 +2,7 @@ import styles from "../styles/components/MovieDetails/MovieDetail.module.scss";
 import { FaRegHeart, FaHeart } from "react-icons/fa";
 import { useEffect, useState } from "react";
 import Loading from "../components/Loading/Loading";
+import { useParams } from "react-router-dom";
 
 export const getStaticPaths = async () => {
   const response = await fetch("https://www.swapi.tech/api/films");
@@ -32,11 +33,13 @@ export const getStaticProps = async (context) => {
 };
 
 const Details = ({ movie }) => {
-  const [favourite, setFavourite] = useState(false);
+  const [save, setSave] = useState(false);
   const [actorArray, setActorArray] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [detailsList, setDetailsList] = useState(false);
   const [actorId, setActorId] = useState("");
+  const [getArrayFrom, setGetArrayFrom] = useState();
+  const [favouritesArray, setFavouritesArray] = useState([]);
+  // const thisMovie = movie.find((m) => m.uid === movie.result.uid);
 
   const requestCharacter = async (link) => {
     const response = await fetch(link);
@@ -56,19 +59,55 @@ const Details = ({ movie }) => {
       }
     }
     setLoading(false);
-    console.log(actorArray);
+    console.log(movie.result.uid);
   }, []);
+
+  useEffect(() => {
+    let arrayFrom = localStorage.getItem("favourites")
+      ? JSON.parse(localStorage.getItem("favourites"))
+      : [];
+    setFavouritesArray(arrayFrom);
+    console.log(
+      "Favourites Array from local storage to use state",
+      favouritesArray
+    );
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem("favourites", JSON.stringify(favouritesArray));
+    if (favouritesArray.indexOf(movie.result.uid) > -1) {
+      setSave(true);
+    } else {
+      setSave(false);
+    }
+  }, [favouritesArray]);
+
+  const saveMovie = () => {
+    setFavouritesArray((favouritesArray) => [
+      ...favouritesArray,
+      movie.result.uid,
+    ]);
+    setSave(true);
+    console.log(favouritesArray, "With add Item");
+    console.log("Movie UID", movie.result.uid);
+  };
+
+  const deleteMovie = () => {
+    let index = movie.result.uid;
+    if (index > -1) {
+      let newMovieArray = favouritesArray.filter((m) => m !== index);
+      setFavouritesArray(newMovieArray);
+    }
+    setSave(false);
+  };
+
   return (
     <div className={styles.movieDetails}>
       <div className={styles.movieDetails__container}>
         <h4 className={styles.movieDetails__container_episodes}>
           Episodes No: {movie.result.properties.episode_id}
-          <p onClick={() => setFavourite(!favourite)}>
-            {favourite === false ? (
-              <FaRegHeart size={50} />
-            ) : (
-              <FaHeart size={50} />
-            )}
+          <p onClick={save ? deleteMovie : saveMovie}>
+            {save === false ? <FaRegHeart size={50} /> : <FaHeart size={50} />}
           </p>
         </h4>
         <div className={styles.movieDetails__container_flexPart}>
@@ -93,27 +132,26 @@ const Details = ({ movie }) => {
               <Loading />
             ) : (
               <ul>
-                {actorArray.map((actor) => (
-                  <>
-                    <li
-                      onMouseOver={() => setActorId(actor._id)}
-                      onMouseLeave={() => setActorId(!actor._id)}
+                {actorArray.map((actor, index) => (
+                  <li
+                    onMouseOver={() => setActorId(actor._id)}
+                    onMouseLeave={() => setActorId(!actor._id)}
+                    key={index}
+                  >
+                    {actor.properties.name}
+                    <ul
+                      style={{
+                        display: actorId === actor._id ? "block" : "none",
+                      }}
                     >
-                      {actor.properties.name}
-                      <ul
-                        style={{
-                          display: actorId === actor._id ? "block" : "none",
-                        }}
-                      >
-                        <li>Height: {actor.properties.height}</li>
-                        <li>Mass: {actor.properties.mass}</li>
-                        <li>Hair Color: {actor.properties.hair_color}</li>
-                        <li>Skin Color: {actor.properties.skin_color}</li>
-                        <li>Birth Year: {actor.properties.eye_color}</li>
-                        <li>Gender: {actor.properties.gender}</li>
-                      </ul>
-                    </li>
-                  </>
+                      <li>Height: {actor.properties.height}</li>
+                      <li>Mass: {actor.properties.mass}</li>
+                      <li>Hair Color: {actor.properties.hair_color}</li>
+                      <li>Skin Color: {actor.properties.skin_color}</li>
+                      <li>Birth Year: {actor.properties.eye_color}</li>
+                      <li>Gender: {actor.properties.gender}</li>
+                    </ul>
+                  </li>
                 ))}
               </ul>
             )}
