@@ -51,8 +51,7 @@ const Details = ({ movie }) => {
 
   useEffect(async () => {
     setLoading(true);
-    const [firstelememt] = movie.result.properties.characters;
-    for (let actor of [firstelememt]) {
+    for (let actor of movie.result.properties.characters) {
       const actorData = await requestCharacter(actor);
       if (actorData.message === "ok") {
         const { result } = actorData;

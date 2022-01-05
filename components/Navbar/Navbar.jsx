@@ -1,8 +1,17 @@
 import Link from "next/link";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import styles from "../../styles/components/Navbar/Navbar.module.scss";
 
 function Navbar({ searchMovies }) {
+  const [showSearch, setShowSearch] = useState(false);
+
+  useEffect(() => {
+    if (window.location.pathname !== "/") {
+      setShowSearch(true);
+    } else {
+      setShowSearch(false);
+    }
+  }, []);
   return (
     <div className={styles.navbar}>
       <div className={styles.navbar__logo}>
@@ -18,6 +27,7 @@ function Navbar({ searchMovies }) {
           type="text"
           placeholder="Search..."
           onInput={(e) => searchMovies(e.target.value)}
+          style={{ display: showSearch ? "none" : "" }}
         />
       </div>
     </div>
