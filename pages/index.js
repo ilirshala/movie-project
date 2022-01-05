@@ -19,7 +19,9 @@ export const getStaticProps = async () => {
 
 export default function Home({ movies }) {
   const [favourites, setFavourites] = useState([]);
-  const [films, setFilms] = useState([]);
+  const [favouritesFilms, setFavouritesFilms] = useState([]);
+  const [filteredMovies, setFilteredMovies] = useState([...movies.result]);
+  const [searchInput, setSearchInput] = useState("");
 
   useEffect(() => {
     let ifLocalExsi = localStorage.getItem("favourites") ? true : false;
@@ -32,31 +34,66 @@ export default function Home({ movies }) {
       : [];
     console.log("Array from local storage", arrayFrom);
     setFavourites((arr) => [...arr, ...arrayFrom]);
-
+    console.log(movies.result);
     for (const favourite of favourites) {
-      let findMovie = films.find((movie) => movie.uid === favourite);
-
+      let findMovie = movies.result.find((movie) => movie.uid === favourite);
+      console.log(findMovie);
       if (findMovie) {
-        setFilms((films) => [...films, findMovie]);
+        setFavouritesFilms((films) => [...films, findMovie]);
       }
     }
   }, []);
 
+  const searchMovies = (movieTitle) => {
+    setSearchInput(movieTitle);
+    console.log(movieTitle);
+    const filteredMovies = movies.result.filter((movie) => {
+      return movie.properties.title
+        .toLowerCase()
+        .includes(searchInput.toLowerCase());
+    });
+    if (searchInput.length > 1) {
+      setFilteredMovies(filteredMovies);
+    } else {
+      setFilteredMovies(movies.result);
+    }
+  };
+
   return (
     <div className={styles.container}>
-      <Navbar />
+      <Navbar
+        moviesApi={movies}
+        setFilteredMovies={setFilteredMovies}
+        searchInput={searchInput}
+        setSearchInput={setSearchInput}
+        searchMovies={searchMovies}
+      />
       <div className={styles.container__movies}>
-        <ul>
-          {favourites?.map((movie, index) => {
-            return (
+        <div
+          className={styles.container__movies_favouritesMovies}
+          style={{ display: favouritesFilms.length === 0 ? "none" : "flex" }}
+        >
+          <h1>Favourites Movies</h1>
+          <ul>
+            {favouritesFilms?.map((movie, index) => (
               <Link href={"/" + movie.uid} key={index}>
-                <li>{movie}</li>
+                <li className={styles.movieCard} key={movie.uid}>
+                  <div className={styles.movieCard__header}>
+                    <h3>{movie.description}</h3>
+                    <h2>{movie.properties.title}</h2>
+                  </div>
+                  <div className={styles.movieCard__episodes}>
+                    <h3>Episodes: {movie.properties.episode_id}</h3>
+                  </div>
+                </li>
               </Link>
-            );
-          })}
-        </ul>
+            ))}
+          </ul>
+        </div>
+        <h1>Movies</h1>
+
         <ul>
-          {movies?.result?.map((movie, index) => (
+          {filteredMovies.map((movie, index) => (
             <Link href={"/" + movie.uid} key={index}>
               <li className={styles.movieCard} key={movie.uid}>
                 <div className={styles.movieCard__header}>

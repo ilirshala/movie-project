@@ -3,6 +3,7 @@ import { FaRegHeart, FaHeart } from "react-icons/fa";
 import { useEffect, useState } from "react";
 import Loading from "../components/Loading/Loading";
 import { useParams } from "react-router-dom";
+import Navbar from "../components/Navbar/Navbar";
 
 export const getStaticPaths = async () => {
   const response = await fetch("https://www.swapi.tech/api/films");
@@ -102,63 +103,70 @@ const Details = ({ movie }) => {
   };
 
   return (
-    <div className={styles.movieDetails}>
-      <div className={styles.movieDetails__container}>
-        <h4 className={styles.movieDetails__container_episodes}>
-          Episodes No: {movie.result.properties.episode_id}
-          <p onClick={save ? deleteMovie : saveMovie}>
-            {save === false ? <FaRegHeart size={50} /> : <FaHeart size={50} />}
-          </p>
-        </h4>
-        <div className={styles.movieDetails__container_flexPart}>
-          <div className={styles.movieDetails__container_flexPart_left}>
-            <h1>{movie.result.properties.title}</h1>
-            <p>{movie.result.properties.opening_crawl}</p>
-            <div className={styles.movieDetails__container_directors}>
-              <h4>
-                Director: <span>{movie.result.properties.director}</span>
-              </h4>
+    <>
+      <Navbar />
+      <div className={styles.movieDetails}>
+        <div className={styles.movieDetails__container}>
+          <h4 className={styles.movieDetails__container_episodes}>
+            Episodes No: {movie.result.properties.episode_id}
+            <p onClick={save ? deleteMovie : saveMovie}>
+              {save === false ? (
+                <FaRegHeart size={50} />
+              ) : (
+                <FaHeart size={50} />
+              )}
+            </p>
+          </h4>
+          <div className={styles.movieDetails__container_flexPart}>
+            <div className={styles.movieDetails__container_flexPart_left}>
+              <h1>{movie.result.properties.title}</h1>
+              <p>{movie.result.properties.opening_crawl}</p>
+              <div className={styles.movieDetails__container_directors}>
+                <h4>
+                  Director: <span>{movie.result.properties.director}</span>
+                </h4>
+              </div>
+              <div className={styles.movieDetails__container_directors}>
+                <h4>
+                  Producers: <span>{movie.result.properties.producer}</span>
+                </h4>
+              </div>
             </div>
-            <div className={styles.movieDetails__container_directors}>
-              <h4>
-                Producers: <span>{movie.result.properties.producer}</span>
-              </h4>
-            </div>
-          </div>
-          <div className={styles.movieDetails__container_flexPart_right}>
-            {" "}
-            <h2>List of Characters</h2>
-            {loading ? (
-              <Loading />
-            ) : (
-              <ul>
-                {actorArray.map((actor, index) => (
-                  <li
-                    onMouseOver={() => setActorId(actor._id)}
-                    onMouseLeave={() => setActorId(!actor._id)}
-                    key={index}
-                  >
-                    {actor.properties.name}
-                    <ul
-                      style={{
-                        display: actorId === actor._id ? "block" : "none",
-                      }}
+            <div className={styles.movieDetails__container_flexPart_right}>
+              {" "}
+              <h2>List of Characters</h2>
+              {loading ? (
+                <Loading />
+              ) : (
+                <ul>
+                  {actorArray.map((actor, index) => (
+                    <li
+                      onMouseOver={() => setActorId(actor._id)}
+                      onMouseLeave={() => setActorId(!actor._id)}
+                      key={index}
                     >
-                      <li>Height: {actor.properties.height}</li>
-                      <li>Mass: {actor.properties.mass}</li>
-                      <li>Hair Color: {actor.properties.hair_color}</li>
-                      <li>Skin Color: {actor.properties.skin_color}</li>
-                      <li>Birth Year: {actor.properties.eye_color}</li>
-                      <li>Gender: {actor.properties.gender}</li>
-                    </ul>
-                  </li>
-                ))}
-              </ul>
-            )}
+                      {actor.properties.name}
+                      <ul
+                        style={{
+                          display: actorId === actor._id ? "block" : "none",
+                        }}
+                      >
+                        <li>Height: {actor.properties.height}</li>
+                        <li>Mass: {actor.properties.mass}</li>
+                        <li>Hair Color: {actor.properties.hair_color}</li>
+                        <li>Skin Color: {actor.properties.skin_color}</li>
+                        <li>Birth Year: {actor.properties.eye_color}</li>
+                        <li>Gender: {actor.properties.gender}</li>
+                      </ul>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 
