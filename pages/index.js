@@ -18,7 +18,6 @@ export const getStaticProps = async () => {
 };
 
 export default function Home({ movies }) {
-  const [favourites, setFavourites] = useState([]);
   const [favouritesFilms, setFavouritesFilms] = useState([]);
   const [filteredMovies, setFilteredMovies] = useState([...movies.result]);
   const [searchInput, setSearchInput] = useState("");
@@ -33,9 +32,8 @@ export default function Home({ movies }) {
       ? JSON.parse(localStorage.getItem("favourites"))
       : [];
     console.log("Array from local storage", arrayFrom);
-    setFavourites((arr) => [...arr, ...arrayFrom]);
-    console.log(movies.result);
-    for (const favourite of favourites) {
+
+    for (const favourite of arrayFrom) {
       let findMovie = movies.result.find((movie) => movie.uid === favourite);
       console.log(findMovie);
       if (findMovie) {
